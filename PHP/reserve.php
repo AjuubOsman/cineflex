@@ -28,6 +28,8 @@ if (isset($_POST['seats'])) {
             $stmt2->bindParam(':room', $roomid);
             $stmt2->bindParam(':seats', $seatid);
             $stmt2->execute();
+            $_SESSION['notification'] = 'You have chosen 6 or more seats, please contacts us for your reservation';
+            header('location: ../index.php?page=reservations&useridid=' . $userid );
 
 
         }
