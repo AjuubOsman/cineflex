@@ -7,11 +7,6 @@ $endtime = $_GET['endtime'];
 $roomid = $_GET['roomid'];
 $userid = $_SESSION['userid'];
 
-$sql = "SELECT * FROM room WHERE roomname = :roomname ";
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(':roomname', $roomname);
-$stmt->execute();
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $seats = array();
 
@@ -23,10 +18,8 @@ $stmt3->bindParam(':endtime', $endtime);
 
 $stmt3->execute();
 while ($row3 = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-    array_push($seats,$row3['seats']);
+    array_push($seats, $row3['seats']);
 }
-
-
 
 
 if (isset($_SESSION['notification'])) {
@@ -34,38 +27,48 @@ if (isset($_SESSION['notification'])) {
     unset($_SESSION['notification']);
 }
 ?>
-<?php for($x=65,$i=0;$i<$row['rows'];$i++,++$x){      ?>
-    <div  class="letter" style="float: initial"> <?= chr($x); ?> </div>
-    <?php  for($y=1,$a=0;$a<$row['colum'];$a++,$y++){ $seatnumber= chr($x). $y ?>
+<?php
+$sql = "SELECT * FROM room WHERE roomname = :roomname ";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':roomname', $roomname);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+echo $roomname;
+for ($x = 65, $i = 0;
+     $i < $row['rows'];
+     $i++, ++$x) { ?>
+    <div class="letter" style="float: initial"> <?= chr($x); ?> </div>
+    <?php for ($y = 1, $a = 0; $a < $row['colum']; $a++, $y++) {
+        $seatnumber = chr($x) . $y ?>
 
         <div style="float:left">
             <form action="php/reserve.php" method="post">
                 <div class="row">
 
 
-                    <div class="seat"  style="color: white"> <?= $seatnumber?> </div>
+                    <div class="seat" style="color: white"> <?= $seatnumber ?> </div>
 
 
-                    <input type="checkbox" name="seats[]" value="<?= $seatnumber?>"  <?php if(in_array($seatnumber, $seats)){ ?> checked="checked" disabled <?php } ?>>
+                    <input type="checkbox" name="seats[]"
+                           value="<?= $seatnumber ?>" <?php if (in_array($seatnumber, $seats)) { ?> checked="checked" disabled <?php } ?>>
 
 
-
-                    <input type="hidden" name="roomname" value="<?= $roomname?>  ">
-                    <input type="hidden" name="moviesid" value="<?=$moviesid?>">
-
+                    <input type="hidden" name="roomname" value="<?= $roomname ?>  ">
+                    <input type="hidden" name="moviesid" value="<?= $moviesid ?>">
 
 
-                    <input type="hidden" name="starttime" value="<?=$starttime?>">
-                    <input type="hidden" name="endtime" value="<?=$endtime?>">
+                    <input type="hidden" name="starttime" value="<?= $starttime ?>">
+                    <input type="hidden" name="endtime" value="<?= $endtime ?>">
 
-                    <input type="hidden" name="roomid" value="<?=$roomid?>">
+                    <input type="hidden" name="roomid" value="<?= $roomid ?>">
 
                 </div>
         </div>
 
 
-
-    <?php }  }
+    <?php }
+}
 
 ?>
 

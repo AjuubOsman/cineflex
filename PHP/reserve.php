@@ -16,7 +16,7 @@ if (isset($_POST['seats'])) {
     if ($count >= 6) {
 
         $_SESSION['notification'] = 'You have chosen 6 or more seats, please contacts us for your reservation';
-        header('location: ../index.php?page=reserve&moviesid=' . $moviesid . '&roomname=' . $roomname);
+        header('location: ../index.php?page=reserve');
 
     } else {
 
@@ -29,18 +29,29 @@ if (isset($_POST['seats'])) {
             $stmt2->bindParam(':seats', $seatid);
             $stmt2->bindParam(':starttime', $starttime);
             $stmt2->bindParam(':endtime', $endtime);
-
             $stmt2->execute();
+
+
+
             //$_SESSION['notification'] = 'You have chosen 6 or more seats, please contacts us for your reservation';
-            header('location: ../index.php?page=reservations&useridid=' . $userid );
 
 
         }
+
+
+        $stmt = $conn->prepare("UPDATE calendar  SET reserved = 'reserved' WHERE moviesid = :moviesid and starttime = :starttime and endtime = :endtime and roomid = :roomid ");
+        $stmt->bindParam(':moviesid', $moviesid);
+        $stmt->bindParam(':roomid', $roomid);
+        $stmt->bindParam(':starttime', $starttime);
+        $stmt->bindParam(':endtime', $endtime);
+        $stmt->execute();
+        header('location: ../index.php?page=reservations&userid=' . $userid );
+
     }
 
 } else {
     $_SESSION['notification'] = 'Please select a seat.';
-    header('location: ../index.php?page=reserve&moviesid=' . $moviesid . '&roomname=' . $roomname);
+    header('location: ../index.php?page=reserve&moviesid=' . $moviesid . '&roomname=' . $roomname . '&starttime=' . $starttime . '&endtime=' . $endtime . '&roomid=' . $roomid);
 
 
 }
