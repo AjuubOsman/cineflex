@@ -15,9 +15,12 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $seats = array();
 
-$sql = "SELECT seats FROM userreserved where moviesid = :moviesid";
+$sql = "SELECT seats FROM userreserved where moviesid = :moviesid and starttime = :starttime and endtime = :endtime";
 $stmt3 = $conn->prepare($sql);
 $stmt3->bindParam(':moviesid', $moviesid);
+$stmt3->bindParam(':starttime', $starttime);
+$stmt3->bindParam(':endtime', $endtime);
+
 $stmt3->execute();
 while ($row3 = $stmt3->fetch(PDO::FETCH_ASSOC)) {
     array_push($seats,$row3['seats']);
